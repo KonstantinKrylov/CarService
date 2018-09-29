@@ -14,4 +14,4 @@ after_success:
   - export IMAGE_NAME=rabot9ga/carservice
   - docker build -t $IMAGE_NAME:$COMMIT .
   - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
-  - docker push $IMAGE_NAME
+  - docker push $IMAGE_NAME:$COMMIT
