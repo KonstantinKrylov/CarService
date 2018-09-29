@@ -1,0 +1,15 @@
+sudo:
+  required
+
+services:
+  - docker
+
+language: java
+before_install:
+- chmod +x gradlew
+
+after_success:
+  - docker login -u $D_USER -p $D_PASS
+  - export NAME=rabot9ga/test
+  - docker build -t $NAME .
+- docker push $NAME
