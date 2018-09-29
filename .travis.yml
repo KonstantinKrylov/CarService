@@ -10,6 +10,6 @@ before_install:
 
 after_success:
   - docker login -u $D_USER -p $D_PASS
-  - export NAME=rabot9ga/test
+  - export NAME=rabot9ga/carservice
   - docker build -t $NAME .
   - docker push $NAME
