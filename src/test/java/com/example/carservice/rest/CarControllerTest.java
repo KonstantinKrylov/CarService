@@ -3,6 +3,7 @@ package com.example.carservice.rest;
 import com.example.carservice.domain.*;
 import com.example.carservice.dto.*;
 import com.example.carservice.repository.CarRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -25,6 +27,14 @@ public class CarControllerTest {
 
     @Autowired
     private CarRepository repository;
+
+    @Before
+    public void setUp() {
+        client = client
+                .mutate()
+                .responseTimeout(Duration.ofMillis(30000))
+                .build();
+    }
 
     @Test
     public void getById() throws Exception {
