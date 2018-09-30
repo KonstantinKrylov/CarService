@@ -17,10 +17,10 @@ after_success:
 
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
   - echo $TAG
-  - echo $COMMIT
+  - echo $TRAVIS_COMMIT
   - docker login -u $D_USER -p $D_PASS
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
   - export IMAGE_NAME=rabot9ga/carservice
-  - docker build -t $IMAGE_NAME:$COMMIT .
-  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+  - docker build -t $IMAGE_NAME:$TRAVIS_COMMIT .
+  - docker tag $IMAGE_NAME:$TRAVIS_COMMIT $IMAGE_NAME:$TAG
   - docker push $IMAGE_NAME
