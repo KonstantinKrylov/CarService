@@ -13,7 +13,6 @@ before_install:
 - chmod +x gradlew
 
 after_success:
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
   - echo $TAG
   - echo $TRAVIS_COMMIT
   - docker login -u $D_USER -p $D_PASS
