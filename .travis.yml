@@ -9,7 +9,18 @@ before_install:
 - chmod +x gradlew
 
 after_success:
+#  - docker login -u $D_USER -p $D_PASS
+#  - export NAME=rabot9ga/carservice
+#  - docker build -t $NAME .
+#  - docker push $NAME
+
+
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - echo $TAG
+  - echo $COMMIT
   - docker login -u $D_USER -p $D_PASS
-  - export NAME=rabot9ga/carservice
-  - docker build -t $NAME .
-  - docker push $NAME
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - export IMAGE_NAME=rabot9ga/carservice
+  - docker build -t $IMAGE_NAME:$COMMIT .
+  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+  - docker push $IMAGE_NAME
