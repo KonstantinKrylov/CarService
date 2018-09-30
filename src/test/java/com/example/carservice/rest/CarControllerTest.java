@@ -42,7 +42,7 @@ public class CarControllerTest {
 
             String carId = carEntry.getId();
 
-            client.get().uri("/car/{id}", carId)
+            client.get().uri("/api/car/{id}", carId)
                     .exchange()
                     .expectStatus().is2xxSuccessful()
                     .expectBody()
@@ -56,7 +56,7 @@ public class CarControllerTest {
         saveTestCar().subscribe(carEntry -> {
             String serialNumber = carEntry.getSerialNumber();
 
-            client.get().uri("/car/serial/{number}", serialNumber)
+            client.get().uri("/api/car/serial/{number}", serialNumber)
                     .exchange()
                     .expectStatus().isOk()
                     .expectBody()
@@ -67,7 +67,7 @@ public class CarControllerTest {
     @Test
     public void saveCar() throws Exception {
         CarDto carDto = getCarDto();
-        client.post().uri("/car")
+        client.post().uri("/api/car")
                 .body(Mono.just(carDto), CarDto.class)
                 .exchange()
                 .expectStatus().isOk();
