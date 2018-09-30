@@ -4,17 +4,15 @@ sudo:
 services:
   - docker
 
+cache:
+  directories:
+  - $HOME/.gradle
+
 language: java
 before_install:
 - chmod +x gradlew
 
 after_success:
-#  - docker login -u $D_USER -p $D_PASS
-#  - export NAME=rabot9ga/carservice
-#  - docker build -t $NAME .
-#  - docker push $NAME
-
-
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
   - echo $TAG
   - echo $TRAVIS_COMMIT
