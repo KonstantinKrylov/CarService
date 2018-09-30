@@ -3,6 +3,7 @@ package com.example.carservice.rest;
 import com.example.carservice.domain.*;
 import com.example.carservice.dto.*;
 import com.example.carservice.repository.CarRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -28,40 +30,51 @@ public class CarControllerTest {
     @Autowired
     private CarRepository repository;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Before
     public void setUp() {
         client = client
                 .mutate()
                 .responseTimeout(Duration.ofMillis(30000))
                 .build();
+        repository.deleteAll().subscribe();
+
     }
 
     @Test
     public void getById() throws Exception {
-        saveTestCar().subscribe(carEntry -> {
+        saveTestCar().subscribe();
+        String carId = "123456789";
 
-            String carId = carEntry.getId();
-
-            client.get().uri("/api/car/{id}", carId)
-                    .exchange()
-                    .expectStatus().is2xxSuccessful()
-                    .expectBody()
-                    .jsonPath("id", carId);
-        });
+        client.get().uri("/api/car/{id}", carId)
+                .exchange()
+                .expectStatus().is2xxSuccessful()
+                .expectBody()
+                .jsonPath("id", carId);
     }
 
 
     @Test
     public void getBySerial() throws Exception {
-        saveTestCar().subscribe(carEntry -> {
-            String serialNumber = carEntry.getSerialNumber();
+        saveTestCar().subscribe();
+        String serialNumber = "123456789";
+        client.get().uri("/api/car/serial/{number}", serialNumber)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("serialNumber")
+                .isEqualTo(serialNumber)
+                .consumeWith(result -> {
+                    CarDto carDto = null;
+                    try {
+                        carDto = objectMapper.readValue(result.getResponseBody(), CarDto.class);
+                    } catch (IOException ignored) {
+                    }
+                    System.out.println("carDto = " + carDto);
+                });
 
-            client.get().uri("/api/car/serial/{number}", serialNumber)
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .jsonPath("serialNumber", serialNumber);
-        });
     }
 
     @Test
